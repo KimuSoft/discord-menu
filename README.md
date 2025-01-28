@@ -1,7 +1,7 @@
 ## Discord Menu Library
 > Use Discord components without unnecessarily long codes.
 * Typescript
-* discord.js v14.3.0
+* discord.js v14.17.3
 
 ## Features
 * Sample discord button component menus

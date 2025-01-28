@@ -2,11 +2,10 @@ import { DiscordMenu } from "./menu"
 import {
   AwaitMessageCollectorOptionsParams,
   ButtonInteraction,
-  ButtonStyle,
   CommandInteraction,
   ComponentType,
   InteractionReplyOptions,
-  Message,
+  Message
 } from "discord.js"
 import { AfterReact } from "../types"
 
@@ -27,12 +26,13 @@ export abstract class ButtonMenu extends DiscordMenu {
     }
     let message: Message
     if (this.followUp) {
-      message = await i.followUp(menuOption)
+      message = await i.followUp(menuOption) as Message
+    } else if (i.replied || i.deferred) {
+      await i.editReply(menuOption)
+      message = await i.fetchReply()
     } else {
-      message = await (i.replied || i.deferred ? i.editReply : i.reply).call(
-        i,
-        menuOption
-      )
+      await i.reply(menuOption)
+      message = await i.fetchReply()
     }
 
     while (true) {

@@ -7,13 +7,13 @@ import {
   InteractionReplyOptions,
   Message,
   MessageActionRowComponentBuilder,
-  SelectMenuBuilder,
-  SelectMenuInteraction,
+  StringSelectMenuBuilder,
+  StringSelectMenuInteraction
 } from "discord.js"
 import { AfterReact } from "../types"
 
 export class SelectMenu extends DiscordMenu {
-  select = new SelectMenuBuilder()
+  select = new StringSelectMenuBuilder()
   options: any = []
   filter:
     | AwaitMessageCollectorOptionsParams<ComponentType.SelectMenu>["filter"]
@@ -68,7 +68,7 @@ export class SelectMenu extends DiscordMenu {
   async awaitFor(
     i: CommandInteraction,
     options: InteractionReplyOptions
-  ): Promise<SelectMenuInteraction | void> {
+  ): Promise<StringSelectMenuInteraction | void> {
     options.components = [
       new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
         this.select
@@ -78,12 +78,13 @@ export class SelectMenu extends DiscordMenu {
 
     let message: Message
     if (this.followUp) {
-      message = await i.followUp(options)
+      message = await i.followUp(options) as Message
+    } else if (i.replied || i.deferred) {
+      await i.editReply(options)
+      message = await i.fetchReply()
     } else {
-      message = await (i.replied || i.deferred ? i.editReply : i.reply).call(
-        i,
-        options
-      )
+      await i.reply(options)
+      message = await i.fetchReply()
     }
 
     while (true) {
@@ -91,7 +92,7 @@ export class SelectMenu extends DiscordMenu {
         .awaitMessageComponent({
           time: this.timeout,
           filter: this.filter,
-          componentType: ComponentType.SelectMenu,
+          componentType: ComponentType.StringSelect,
         })
         .catch((e) => {
           if (e.message === "InteractionCollectorError") return
