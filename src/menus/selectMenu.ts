@@ -78,7 +78,7 @@ export class SelectMenu extends DiscordMenu {
 
     let message: Message
     if (this.followUp) {
-      message = await i.followUp(options) as Message
+      message = await i.followUp(options)
     } else if (i.replied || i.deferred) {
       await i.editReply(options)
       message = await i.fetchReply()

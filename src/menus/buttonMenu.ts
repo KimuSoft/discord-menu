@@ -26,7 +26,7 @@ export abstract class ButtonMenu extends DiscordMenu {
     }
     let message: Message
     if (this.followUp) {
-      message = await i.followUp(menuOption) as Message
+      message = await i.followUp(menuOption)
     } else if (i.replied || i.deferred) {
       await i.editReply(menuOption)
       message = await i.fetchReply()
