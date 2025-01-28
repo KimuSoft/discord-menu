@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@types/lodash": "^4.17.15",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "tslog": "4.9.3"
   },
   "keywords": [
     "discord",
